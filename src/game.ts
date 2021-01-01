@@ -1,47 +1,40 @@
 import 'phaser';
+import MobPath from './mobpath';
 
-export default class Demo extends Phaser.Scene
+export default class TdGame extends Phaser.Scene
 {
     constructor ()
     {
-        super('demo');
+        super('TdGame');
     }
+
+    graphics : Phaser.GameObjects.Graphics;
+    mobPath : Phaser.Curves.Path;
 
     preload ()
     {
-        this.load.image('logo', 'assets/phaser3-logo.png');
-        this.load.image('libs', 'assets/libs.png');
-        this.load.glsl('bundle', 'assets/plasma-bundle.glsl.js');
-        this.load.glsl('stars', 'assets/starfields.glsl.js');
     }
 
     create ()
     {
-        this.add.shader('RGB Shift Field', 0, 0, 800, 600).setOrigin(0);
+        this.graphics = this.add.graphics();
+        this.mobPath = new MobPath(96, -32, [
+            new Phaser.Geom.Point(96, 164),
+            new Phaser.Geom.Point(480, 164),
+            new Phaser.Geom.Point(480, 544),
+        ]).getPath();
 
-        this.add.shader('Plasma', 0, 412, 800, 172).setOrigin(0);
-
-        this.add.image(400, 300, 'libs');
-
-        const logo = this.add.image(400, 70, 'logo');
-
-        this.tweens.add({
-            targets: logo,
-            y: 350,
-            duration: 1500,
-            ease: 'Sine.inOut',
-            yoyo: true,
-            repeat: -1
-        })
+        this.graphics.lineStyle(3, 0xffffff, 1);
+        this.mobPath.draw(this.graphics);
     }
 }
 
 const config = {
     type: Phaser.AUTO,
-    backgroundColor: '#125555',
-    width: 800,
-    height: 600,
-    scene: Demo
+    backgroundColor: '#000000',
+    width: 640,
+    height: 512,
+    scene: TdGame
 };
 
 const game = new Phaser.Game(config);
